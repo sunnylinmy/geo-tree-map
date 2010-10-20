@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font: 14px/125% "Helvetica Neue", sans-serif;
+}
+
+#fig {
+  margin: auto;
+  width: 800px;
+  height: 450px;
+}
+
+#popupData {
+  position: absolute;
+  visibility: hidden;
+  background-color: #ccc;
+  border: 1px solid #000;
+  padding: 10px;
+  font-size: 8pt;
+  z-index:100;
+}
+
+#close a {
+  float: right;
+  font-weight: bold;
+  text-decoration: none;
+}
