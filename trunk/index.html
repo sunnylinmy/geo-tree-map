@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <!-- Set the character encoding -->
+    <meta charset="UTF-8">
+    
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" href="style.css" />
+    
+    <!-- Javascript -->
+    <script type="text/javascript" src="scripts/protovis-r3.2.js"></script>
+    <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="scripts/centroid.js"></script>
+    <script type="text/javascript" src="scripts/us_lowres.js"></script>
+    <script type="text/javascript" src="scripts/popupDiv.js"></script>
+    <script type="text/javascript" src="data.js"></script>
+    
+    <!-- Title -->
+    <title>Geo Tree Map</title>
+    
+  </head>
+  <body>
+    <div id="popupData">
+      <span id="close"><a href="javascript:setVisible('popupData', null)">Hide</a></span>
+      <div id="dataDiv">uefhef</div>
+    </div>
+    <div id="fig">
+      <script type="text/javascript">
+ 
+var majorCategory = null;//"Management occupations",
+    minorCategory = null,
+    measure = "annualMeanWage";
+
+
+var w = 810,
+    h = 400,
+    yearsMargin = 100,
+    measureMaxVal = 0,
+    measureMinVal = 0;
+
+var scale = pv.Geo.scale()
+    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
+    .range({x: 0, y: 0}, {x: w, y: h});
+
+function findMaxMinValue(majorCategory, minorCategory, measure) {
+  measureMaxVal = -1;
+  measureMinVal = 1000000000000;
+  var key;
+    for (key in us_occ_all) {
+    var arrVal = us_occ_all[key];
+    arrVal = arrVal.occupations["All Occupations"];
+    if (majorCategory != null && majorCategory != "") {
+      arrVal = arrVal.occupations[majorCategory];
+    }
+    if (minorCategory != null && minorCategory != "") {
+      arrVal = arrVal.occupations[minorCategory];
+    }   
+
+    if (measure == "totalEmpl") {
+      arrVal = arrVal.total;
+    }  else if (measure == "annualMeanWage") {
+      arrVal = arrVal.annualMeanWage;
+    } else if (measure == "ann10Wage") {
+      arrVal = arrVal.ann10Wage;
+    } else if (measure == "ann25Wage") {
+      arrVal = arrVal.ann25Wage;
+    } else if (measure == "ann50Wage") {
+      arrVal = arrVal.ann50Wage;
+    } else if (measure == "ann75Wage") {
+      arrVal = arrVal.ann75Wage;
+    } else if (measure == "ann90Wage") {
+      arrVal = arrVal.ann90Wage;
+    }
+    if (arrVal > measureMaxVal && arrVal >= 0) {
+      measureMaxVal = arrVal
+    }
+    if (arrVal < measureMinVal && arrVal >= 0) {
+      measureMinVal = arrVal
+    }
+        
+  }
+}
+
+findMaxMinValue(majorCategory, minorCategory, measure);
+
+var intervalScale = parseInt((measureMaxVal - measureMinVal)/5);    
+var color = pv.Scale.linear(measureMinVal, measureMaxVal,(measureMaxVal - measureMinVal)/10).range("lightgreen", "forestgreen");
+
+
+// Find the centroid for each state
+us_lowres.forEach(function(c) {
+  c.code = c.code.toUpperCase();
+  c.centLatLon = centroid(c.borders[0]);
+});
+
+function getStateValue(stCode, majorCategory, minorCategory, measure) {
+  var arrVal = us_occ_all[stCode].occupations["All Occupations"];
+  if (majorCategory != null && majorCategory != "") {
+    arrVal = arrVal.occupations[majorCategory];
+  }
+  if (minorCategory != null && minorCategory != "") {
+    arrVal = arrVal.occupations[minorCategory];
+  }
+
+  if (measure == "totalEmpl") {
+    return arrVal.total;
+  } else if (measure == "annualMeanWage") {
+    return arrVal.annualMeanWage;
+  } else if (measure == "ann10Wage") {
+    return arrVal.ann10Wage;
+  } else if (measure == "ann25Wage") {
+    return arrVal.ann25Wage;
+  } else if (measure == "ann50Wage") {
+    return arrVal.ann50Wage;
+  } else if (measure == "ann75Wage") {
+    return arrVal.ann75Wage;
+  } else if (measure == "ann90Wage") {
+    return arrVal.ann90Wage;
+  }
+
+  return 0;
+}
+
+// Add the main panel
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(30)
+    .bottom(20);
+
+
+// Add a panel for each state
+var state = vis.add(pv.Panel)
+    .data(us_lowres);
+
+// Add a panel for each state land mass
+state.add(pv.Panel)
+    .data(function(c) { return c.borders })
+  .add(pv.Line)
+    .data(function(l) { return l })
+    .left(scale.x)
+    .top(scale.y)
+    .fillStyle(function(d, l, c) { return color(getStateValue(c.code, majorCategory, minorCategory, measure)) })
+    .lineWidth(1)
+    .strokeStyle("white")
+    .antialias(false)
+    .event("mouseover", function() { this.fillStyle("blue"); return this; } )
+    .event("mouseout", function(d, l, c) {  this.fillStyle(color(getStateValue(c.code, majorCategory, minorCategory, measure))); return this;} )
+    .event("click", function(d,l,c) { setVisible('popupData', c.code); return this; } );
+    
+
+// Add a label with the state code in the middle of every state
+vis.add(pv.Label)
+    .data(us_lowres)
+    .left(function(c) { return scale(c.centLatLon).x })
+    .top(function(c) { return scale(c.centLatLon).y })
+    .text(function(c) { return c.code })
+    .textAlign("center")
+    .textBaseline("middle");
+
+// Add the color bars for the color legend
+vis.add(pv.Bar)
+    .data(pv.range(measureMinVal, measureMaxVal, intervalScale))
+    .bottom(function(d) { return this.index * 12 })
+    .height(10)
+    .width(10)
+    .left(5)
+    .fillStyle(function(d) { return color(measureMinVal + intervalScale * this.index) })
+    .lineWidth(null)
+  .anchor("right").add(pv.Label)
+    .textAlign("left")
+    .text(function(d) { return d + " - " + (d + intervalScale) + "" });
+
+vis.render();
+
+      </script>
+    </div>
+  </body>
+</html>
