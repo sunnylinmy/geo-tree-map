@@ -11,9 +11,9 @@
     <script type="text/javascript" src="scripts/protovis-r3.2.js"></script>
     <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="scripts/centroid.js"></script>
-    <script type="text/javascript" src="scripts/us_lowres.js"></script>
+    <script type="text/javascript" src="scripts/us_lowres.js"></script>  
     <script type="text/javascript" src="scripts/popupDiv.js"></script>
-    <script type="text/javascript" src="us_occ_all.js"></script>
+    <script type="text/javascript" src="stateOccupationData.js"></script>
     
     <!-- Title -->
     <title>Geo Tree Map</title>
@@ -23,7 +23,7 @@
     <!-- Data on demand popup window -->
     <div id="popupData">
       <span id="close"><a href="javascript:setVisible('popupData', null)">Hide</a></span>
-      <div id="dataDiv">uefhef</div>
+      <div id="dataDiv"></div>
     </div>
     
     <!-- Protovis rendering -->
@@ -41,18 +41,17 @@ var w = 810,
     measureMinVal = 0;
 
 var scale = pv.Geo.scale()
-    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
+	.domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
     .range({x: 0, y: 0}, {x: w, y: h});
 
 function findMaxMinValue(majorCategory, minorCategory, measure) {
   measureMaxVal = -1;
   measureMinVal = 1000000000000;
   var key;
-  for (key in us_occ_all) {
-    var arrVal = us_occ_all[key];
-    arrVal = arrVal.occupations["All Occupations"];
+  for (key in stateOccupationData) {
+    var arrVal = stateOccupationData[key];
     if (majorCategory != null && majorCategory != "") {
-      arrVal = arrVal.occupations[majorCategory];
+      arrVal = arrVal.categories[majorCategory];
     }
     if (minorCategory != null && minorCategory != "") {
       arrVal = arrVal.occupations[minorCategory];
@@ -80,10 +79,11 @@ us_lowres.forEach(function(c) {
   c.centLatLon = centroid(c.borders[0]);
 });
 
+
 function getStateValue(stateCode, majorCategory, minorCategory, measure) {
-  var arrVal = us_occ_all[stateCode].occupations["All Occupations"];
+  var arrVal = stateOccupationData[stateCode];
   if (majorCategory != null && majorCategory != "") {
-    arrVal = arrVal.occupations[majorCategory];
+    arrVal = arrVal.categories[majorCategory];
   }
   if (minorCategory != null && minorCategory != "") {
     arrVal = arrVal.occupations[minorCategory];
@@ -114,11 +114,11 @@ state.add(pv.Panel)
     .lineWidth(1)
     .strokeStyle("white")
     .antialias(false)
-    .event("mouseover", function() { this.fillStyle("blue"); return this; } )
-    .event("mouseout", function(d, l, c) {  this.fillStyle(color(getStateValue(c.code, majorCategory, minorCategory, measure))); return this;} )
+    .event("mouseover", function(d,l,c) { this.fillStyle("blue"); return this; } )
+	.event("mouseout", function(d, l, c) {  this.fillStyle(color(getStateValue(c.code, majorCategory, minorCategory, measure))); return this;} )
     .event("click", function(d,l,c) { setVisible('popupData', c.code); return this; } );
 
-// Add a label with the state code in the middle of every state
+//Add a label with the state code in the middle of every state
 vis.add(pv.Label)
     .data(us_lowres)
     .left(function(c) { return scale(c.centLatLon).x })
@@ -126,6 +126,7 @@ vis.add(pv.Label)
     .text(function(c) { return c.code })
     .textAlign("center")
     .textBaseline("middle");
+
 
 // Add the color bars for the color legend
 vis.add(pv.Bar)
