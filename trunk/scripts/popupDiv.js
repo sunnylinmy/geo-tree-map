@@ -1,18 +1,9 @@
-/* -----------------------------------------------
-   Floating layer - v.1
-   (c) 2006 www.haan.net
-   contact: jeroen@haan.net
-   You may use this script but please leave the credits on top intact.
-   Please inform us of any improvements made.
-   When usefull we will add your credits.
-  ------------------------------------------------ */
-
 x = 0;
 y = 0;
 function setVisible(obj, data) {
   setTimeout("placeIt('popupData')",0); 
   obj = document.getElementById(obj);
-  if (obj.style.visibility == 'hidden') {
+  if (obj.style.visibility == 'hidden' || obj.style.visibility == '') {
     obj.style.visibility = 'visible'
     var dataLbl = "Total Employed: " + getStateValue(data, majorCategory, minorCategory, "total");
     var totalLabel = document.createTextNode(dataLbl);
@@ -50,6 +41,7 @@ function setVisible(obj, data) {
 }
 
 function init() {
+  setTimeout("placeIt('popupData')",0); 
   if (window.Event) {
      document.captureEvents(Event.CLICK);
   }
