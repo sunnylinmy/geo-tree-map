@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <!-- Set the character encoding -->
+    <meta charset="UTF-8">
+    
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" href="style.css" />
+    
+    <!-- Javascript -->
+    <script type="text/javascript" src="scripts/protovis-r3.2.js"></script>
+    <script type="text/javascript" src="professions.js"></script>
+    
+    <!-- Title -->
+    <title>Tree Map</title>
+    
+  </head>
+  <body>
+    <div id="fig">
+      <script type="text/javascript">
+
+var scope = "All Occupations";
+
+var currentHover = -1;
+
+var w = 800,
+    h = 600,
+    color = pv.Colors.category19().by(function(d) { return d.parentNode.nodeName; })
+    nodes = pv.dom(professions[scope]).root(scope).nodes();
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(10);
+
+var treemap = vis.add(pv.Layout.Treemap)
+    .nodes(nodes)
+    .round(false)
+    .padding(1);
+
+treemap.leaf.add(pv.Panel)
+    .fillStyle(function(d) { return d.index == currentHover ? color(d).brighter() : color(d); })
+    .strokeStyle("white")
+    .lineWidth(1)
+    .antialias(false)
+    .event("mouseover", function(d) { currentHover = d.index; return this; });
+
+treemap.label.add(pv.Label)
+    .visible(function(d) {return d.parentNode && d.parentNode.nodeName == scope; })
+    .textAngle(0)
+    .textAlign("left")
+    .textBaseline("top")
+    .left(function(d) { return d.x; })
+    .top(function(d) { return d.y; });
+
+vis.render();
+
+      </script>
+    </div>
+  </body>
+</html>
