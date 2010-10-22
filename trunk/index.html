@@ -14,6 +14,7 @@
     <script type="text/javascript" src="scripts/us_lowres.js"></script>  
     <script type="text/javascript" src="scripts/popupDiv.js"></script>
     <script type="text/javascript" src="stateOccupationData.js"></script>
+    <script type="text/javascript" src="scripts/titleDescription.js"></script>    
     
     <!-- Title -->
     <title>Geo Tree Map</title>
@@ -25,24 +26,23 @@
       <span id="close"><a href="javascript:setVisible('popupData', null)">Hide</a></span>
       <div id="dataDiv"></div>
     </div>
-    
+    <div id="titleDescription"></div>
     <!-- Protovis rendering -->
     <div id="fig">
-      <script type="text/javascript">
-
+    <script type="text/javascript">
+    
 var majorCategory = "Management occupations",
     minorCategory = null,
     measure = "annualMeanWage";
 
 var w = 910,
     h = 400,
-    yearsMargin = 100,
     measureMaxVal = 0,
     measureMinVal = 0,
     level = 2;
 
 var scale = pv.Geo.scale()
-	.domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
+    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
     .range({x: 0, y: 0}, {x: w, y: h});
 
 function findMaxMinValue(majorCategory, minorCategory, measure) {
@@ -67,6 +67,8 @@ function findMaxMinValue(majorCategory, minorCategory, measure) {
     }
   }
 }
+
+setTitleDescription("titleDescription", measure);
 
 function getStateValue(stateCode, majorCategory, minorCategory, measure) {
 	  var arrVal = stateOccupationData[measure + "_" + level];
@@ -128,7 +130,6 @@ vis.add(pv.Label)
     .textAlign("center")
     .textBaseline("middle");
 
-
 // Add the color bars for the color legend
 vis.add(pv.Bar)
     .data(pv.range(measureMinVal, measureMaxVal, intervalScale))
@@ -141,6 +142,13 @@ vis.add(pv.Bar)
   .anchor("right").add(pv.Label)
     .textAlign("left")
     .text(function(d) { return d + " - " + (d + intervalScale) + "" });
+
+/* The line. */
+vis.add(pv.Line)
+    .left(300)
+    .bottom(300)
+    .lineWidth(3);
+
 
 vis.render();
 
