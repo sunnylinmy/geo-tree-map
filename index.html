@@ -30,15 +30,16 @@
     <div id="fig">
       <script type="text/javascript">
 
-var majorCategory = null;//"Management occupations",
+var majorCategory = "Management occupations",
     minorCategory = null,
     measure = "annualMeanWage";
 
-var w = 810,
+var w = 910,
     h = 400,
     yearsMargin = 100,
     measureMaxVal = 0,
-    measureMinVal = 0;
+    measureMinVal = 0,
+    level = 2;
 
 var scale = pv.Geo.scale()
 	.domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
@@ -47,17 +48,16 @@ var scale = pv.Geo.scale()
 function findMaxMinValue(majorCategory, minorCategory, measure) {
   measureMaxVal = -1;
   measureMinVal = 1000000000000;
-  var key;
-  for (key in stateOccupationData) {
-    var arrVal = stateOccupationData[key];
+  var levelOccupationData = stateOccupationData[measure + "_" + level];
+  
+  for (var key in levelOccupationData) {
+    var arrVal = levelOccupationData[key];
     if (majorCategory != null && majorCategory != "") {
-      arrVal = arrVal.categories[majorCategory];
+      arrVal = arrVal[majorCategory];
     }
     if (minorCategory != null && minorCategory != "") {
-      arrVal = arrVal.occupations[minorCategory];
+      arrVal = arrVal[minorCategory];
     }
-
-    arrVal = arrVal[measure];
 
     if (arrVal > measureMaxVal && arrVal >= 0) {
       measureMaxVal = arrVal
@@ -66,6 +66,19 @@ function findMaxMinValue(majorCategory, minorCategory, measure) {
       measureMinVal = arrVal
     }
   }
+}
+
+function getStateValue(stateCode, majorCategory, minorCategory, measure) {
+	  var arrVal = stateOccupationData[measure + "_" + level];
+	  var arrVal = arrVal[stateCode];
+	  if (majorCategory != null && majorCategory != "") {
+	    arrVal = arrVal[majorCategory];
+	  }
+	  if (minorCategory != null && minorCategory != "") {
+	    arrVal = arrVal[minorCategory];
+	  }
+	  
+	  return arrVal;
 }
 
 findMaxMinValue(majorCategory, minorCategory, measure);
@@ -79,18 +92,6 @@ us_lowres.forEach(function(c) {
   c.centLatLon = centroid(c.borders[0]);
 });
 
-
-function getStateValue(stateCode, majorCategory, minorCategory, measure) {
-  var arrVal = stateOccupationData[stateCode];
-  if (majorCategory != null && majorCategory != "") {
-    arrVal = arrVal.categories[majorCategory];
-  }
-  if (minorCategory != null && minorCategory != "") {
-    arrVal = arrVal.occupations[minorCategory];
-  }
-  
-  return arrVal[measure];
-}
 
 // Add the main panel
 var vis = new pv.Panel()
@@ -131,10 +132,10 @@ vis.add(pv.Label)
 // Add the color bars for the color legend
 vis.add(pv.Bar)
     .data(pv.range(measureMinVal, measureMaxVal, intervalScale))
-    .bottom(function(d) { return this.index * 12 })
+    .bottom(function(d) { return this.index * 12 + 40 })
     .height(10)
     .width(10)
-    .left(5)
+    .left(w-100)
     .fillStyle(function(d) { return color(measureMinVal + intervalScale * this.index) })
     .lineWidth(null)
   .anchor("right").add(pv.Label)
