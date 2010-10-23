@@ -1,7 +1,11 @@
 
 function setTitleDescription(obj, desc) {
 	  if (desc == "total") {
-		  desc = "total number of people employed";
+		  if (level != 1) {
+			  desc = "% total number of people employed";
+		  } else {
+			  desc = "total number of people employed";			  
+		  }
 	  } else if (desc == "annualMeanWage") {
 		  desc = "annual mean wage";	
 	  } else if (desc == "ann10Wage") {
@@ -16,7 +20,14 @@ function setTitleDescription(obj, desc) {
 		  desc = "annual 90th percentile wage";	
 	  }
 	  obj = document.getElementById(obj);
-	  var description = document.createTextNode("Map Showing the " + desc + " per state in 2009");
+	  var text = "Map Showing the " + desc + " per state in 2009";
+	  
+	  if (minorCategory) {
+		  text += minorCategory;
+	  } else if (majorCategory) {
+		  text+= " for " + majorCategory;
+	  }
+	  var description = document.createTextNode(text);
 	  obj.appendChild(description);
 }
 
