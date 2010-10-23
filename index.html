@@ -27,6 +27,18 @@
       <div id="dataDiv"></div>
     </div>
     <div id="titleDescription"></div>
+    <form>
+	<select id ="measureSelect" onchange="redrawMap();">
+		<option value="total">Total
+		<option value="annualMeanWage">Annual mean wage
+		<option value="ann10Wage">10th percentile wage
+		<option value="ann25Wage">25th percentile wage
+		<option value="ann50Wage">50th percentile wage
+		<option value="ann75Wage">75th percentile wage
+		<option value="ann90Wage">90th percentile wage
+	</select>
+	</form>
+
     <!-- Protovis rendering -->
     <div id="fig">
     <script type="text/javascript">
@@ -35,40 +47,29 @@ var majorCategory = "Management occupations",
     minorCategory = null,
     measure = "total";
 
+function init() {
+	var currentTagTokens = window.location.toString().split("?" );
+	for ( var i = 1; i < currentTagTokens.length; i++ ) {
+	    var currentTag = currentTagTokens[i];
+	    var property = currentTag.substr(0, currentTag.indexOf('='));
+		var value = currentTag.substr(currentTag.indexOf('=') + 1);
+	    if (property == "measure") {
+			measure = value;
+			var selectBox = document.getElementById("measureSelect");
+			measure = selectBox.value = value;
+		}
+	}
+}
+init();
 var w = 910,
     h = 400,
     measureMaxVal = 0,
     measureMinVal = 0,
     level = 2;
 
-var scale = pv.Geo.scale()
-    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
-    .range({x: 0, y: 0}, {x: w, y: h});
-
-function findMaxMinValue(majorCategory, minorCategory, measure) {
-  measureMaxVal = -1;
-  measureMinVal = 1000000000000;
-  var levelOccupationData = stateOccupationData[measure + "_" + level];
-  
-  for (var key in levelOccupationData) {
-    var arrVal = levelOccupationData[key];
-    if (majorCategory != null && majorCategory != "") {
-      arrVal = arrVal[majorCategory];
-    }
-    if (minorCategory != null && minorCategory != "") {
-      arrVal = arrVal[minorCategory];
-    }
-
-    if (arrVal > measureMaxVal && arrVal >= 0) {
-      measureMaxVal = arrVal
-    }
-    if (arrVal < measureMinVal && arrVal >= 0) {
-      measureMinVal = arrVal
-    }
-  }
-}
-
-setTitleDescription("titleDescription", measure);
+var scale;
+var intervalScale;    
+var color;
 
 function getStateValue(stateCode, majorCategory, minorCategory, measure) {
 	  var arrVal = stateOccupationData[measure + "_" + level];
@@ -79,14 +80,48 @@ function getStateValue(stateCode, majorCategory, minorCategory, measure) {
 	  if (minorCategory != null && minorCategory != "") {
 	    arrVal = arrVal[minorCategory];
 	  }
-	  
 	  return arrVal;
 }
 
-findMaxMinValue(majorCategory, minorCategory, measure);
+function findMaxMinValue(majorCategory, minorCategory, measure) {
+	  measureMaxVal = -1;
+	  measureMinVal = 1000000000000;
+	  var levelOccupationData = stateOccupationData[measure + "_" + level];
+	  
+	  for (var key in levelOccupationData) {
+	    var arrVal = levelOccupationData[key];
+	    if (majorCategory != null && majorCategory != "") {
+	      arrVal = arrVal[majorCategory];
+	    }
+	    if (minorCategory != null && minorCategory != "") {
+	      arrVal = arrVal[minorCategory];
+	    }
 
-var intervalScale = parseInt((measureMaxVal - measureMinVal)/5);    
-var color = pv.Scale.linear(measureMinVal, measureMaxVal,(measureMaxVal - measureMinVal)/10).range("lightgreen", "forestgreen");
+	    if (arrVal > measureMaxVal && arrVal >= 0) {
+	      measureMaxVal = arrVal
+	    }
+	    if (arrVal < measureMinVal && arrVal >= 0) {
+	      measureMinVal = arrVal
+	    }
+	  }
+}
+
+function initializeVars() {
+	scale = pv.Geo.scale()
+	    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
+	    .range({x: 0, y: 0}, {x: w, y: h});
+	
+	setTitleDescription("titleDescription", measure);
+	findMaxMinValue(majorCategory, minorCategory, measure);
+	
+	intervalScale = parseInt((measureMaxVal - measureMinVal)/5);    
+	color = pv.Scale.linear(measureMinVal, measureMaxVal,(measureMaxVal - measureMinVal)/10).range("lightgreen", "forestgreen");
+}
+
+initializeVars();
+
+
+
 
 // Find the centroid for each state
 us_lowres.forEach(function(c) {
@@ -131,7 +166,7 @@ vis.add(pv.Label)
     .textBaseline("middle");
 
 // Add the color bars for the color legend
-vis.add(pv.Bar)
+var bars = vis.add(pv.Bar)
     .data(pv.range(measureMinVal, measureMaxVal, intervalScale))
     .bottom(function(d) { return this.index * 12 + 40 })
     .height(10)
@@ -143,12 +178,19 @@ vis.add(pv.Bar)
     .textAlign("left")
     .text(function(d) { return d + " - " + (d + intervalScale) + "" });
 
-/* The line. */
-vis.add(pv.Line)
-    .left(300)
-    .bottom(300)
-    .lineWidth(3);
+function redrawMap() {
+	var selectBox = document.getElementById("measureSelect");
+	measure = selectBox.options[selectBox.selectedIndex].value;
+	//initializeVars();
 
+    //bars.render();
+	//state.render();
+	//vis.render();
+
+
+	//state.render();
+	window.location = "index.html?measure=" + measure;
+}
 
 vis.render();
 
