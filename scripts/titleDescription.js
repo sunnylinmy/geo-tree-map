@@ -16,7 +16,7 @@ function setTitleDescription(obj, desc) {
 		  desc = "annual 90th percentile wage";	
 	  }
 	  obj = document.getElementById(obj);
-	  var description = document.createTextNode("Map Showing the " + desc + " per state");
+	  var description = document.createTextNode("Map Showing the " + desc + " per state in 2009");
 	  obj.appendChild(description);
 }
 
