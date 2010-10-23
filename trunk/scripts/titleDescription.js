@@ -2,7 +2,7 @@
 function setTitleDescription(obj, desc) {
 	  if (desc == "total") {
 		  if (level != 1) {
-			  desc = "% total number of people employed";
+			  desc = "% of people employed";
 		  } else {
 			  desc = "total number of people employed";			  
 		  }
@@ -28,6 +28,7 @@ function setTitleDescription(obj, desc) {
 		  text+= " for " + majorCategory;
 	  }
 	  var description = document.createTextNode(text);
+	  clearContainer(obj);
 	  obj.appendChild(description);
 }
 
