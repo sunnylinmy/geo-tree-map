@@ -5,7 +5,11 @@ function setVisible(obj, data) {
   obj = document.getElementById(obj);
   if (obj.style.visibility == 'hidden' || obj.style.visibility == '') {
     obj.style.visibility = 'visible'
-    var dataLbl = "Total Employed: " + getStateValue(data, majorCategory, minorCategory, "total");
+    if (level != 1) {
+        var dataLbl = "Total % Employed: " + getStateValue(data, majorCategory, minorCategory, "total") + "%";   
+    } else {
+    	var dataLbl = "Total Employed: " + getStateValue(data, majorCategory, minorCategory, "total");
+    }
     var totalLabel = document.createTextNode(dataLbl);
     dataLbl = "Annual Mean Wage: " + getStateValue(data, majorCategory, minorCategory, "annualMeanWage");
     var annualMeanWageLabel = document.createTextNode(dataLbl);
