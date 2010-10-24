@@ -294,8 +294,6 @@ treemap.leaf.add(pv.Panel)
 		.event("mouseout", function() { treeHover = occupationForNode(undefined); return this; })
 		.event("click", function(d) {
 			selectedOccupation = occupationForNode(d);
-			console.log(d);
-			console.log(selectedOccupation);
 			redrawMap(true, false);
 			return this;
 		});
