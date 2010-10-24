@@ -292,24 +292,25 @@ function redrawMap(geomapChange, treemapChange) {
 	if (geomapChange && treemapChange) {
 		var selectBox = document.getElementById("measureSelect");
 		selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
-		initializeVars();
-		stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
-		vis.render();
-		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
-		treemap.reset();
-		treemap.render()
+		updateGeomap();
+		updateTreemap();
 	} else if (geomapChange) {
-		initializeVars();
-		stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
-		statePanel.render();
+		updateGeomap();
 	} else if (treemapChange) {
-		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
-		treemap.reset();
-		treemap.render()
+		updateTreemap();
 	}
-	//window.location = "combined.html?measure=" + selectedMeasure;
+}
+function updateGeomap() {
+	initializeVars();
+	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
+	statePanel.render();
 }
 
+function updateTreemap() {
+	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+	treemap.reset();
+	treemap.render()
+}
 
 // draw the vis
 vis.render();
