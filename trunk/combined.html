@@ -189,8 +189,8 @@ statePanel.add(pv.Panel)
 		.lineWidth(1)
 		.strokeStyle("white")
 		.antialias(false)
-		.event("mouseover", function(d,l,c) { setVisible('popupData', c.code, selectedOccupation, true); this.fillStyle("blue"); return this; } )
-		.event("mouseout", function(d, l, c) { setVisible('popupData', c.code, selectedOccupation, false); this.fillStyle(geoColor(getValue(c.code, selectedOccupation, selectedMeasure))); return this;} )
+		.event("mouseover", function(d,l,c) { setVisible('popupData', c, selectedOccupation, true); this.fillStyle("blue"); return this; } )
+		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); this.fillStyle(geoColor(getValue(c.code, selectedOccupation, selectedMeasure))); return this;} )
 		.event("click", function(d, l,c) { alert("hello world"); return this; } );
 
 //Add a label with the state code in the middle of every state
