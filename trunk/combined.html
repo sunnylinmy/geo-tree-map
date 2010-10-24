@@ -213,7 +213,17 @@ var bars = vis.add(pv.Bar)
 		.lineWidth(null)
 	.anchor("right").add(pv.Label)
 		.textAlign("left")
-		.text(function(d) { return d + " - " + (d + intervalScale) + "" });
+		.text(function(d) { 
+			var textRangeMin = d;
+			var textRangeMax = (d + intervalScale);
+			if (intervalScale < 1) { 
+				textRangeMin = textRangeMin.toPrecision(2); 
+				textRangeMax = textRangeMax.toPrecision(2); } 
+			else {
+				textRangeMin = parseInt(textRangeMin); 
+				textRangeMax = parseInt(textRangeMax); 
+			} 
+			return textRangeMin + " - " + textRangeMax + "" });
 
 
 // BEGIN TREEMAP
