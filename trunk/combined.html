@@ -196,7 +196,7 @@ statePanel.add(pv.Panel)
 		.event("click", function(d, l, c) {
 			selectedStateCode = c.code;
 			nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
-			treemap.nodes(nodes);
+			treemap.reset();
 			treemap.render();
 			return this;
 		});
@@ -237,7 +237,9 @@ stateLegend = vis.add(pv.Bar)
 
 
 // BEGIN TREEMAP
-
+function getNodes() {
+	return nodes;
+}
 var treeHover = -1,
 	treeSelection = -1;
 
@@ -258,7 +260,7 @@ var treemap = vis.add(pv.Layout.Treemap)
 		.width(width)
 		.height(treeHeight)
 		.top(geoHeight+30)
-		.nodes(nodes)
+		.nodes(getNodes)
 		.round(false)
 		.padding(1);
 
@@ -293,10 +295,7 @@ function redrawMap() {
 	selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
 	initializeVars();
 	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
-	//stateLegend.render();
-	//statePanel.render();
 	vis.render();
-	//statePanel.render();
 	//window.location = "combined.html?measure=" + selectedMeasure;
 }
 
@@ -305,6 +304,8 @@ function redrawMap() {
 vis.render();
 
 			</script>
+
 		</div>
+
 	</body>
 </html>
