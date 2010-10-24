@@ -239,7 +239,7 @@ stateLegend = vis.add(pv.Bar)
 // BEGIN TREEMAP
 
 var treeHover = -1,
-		treeSelection = -1;
+	treeSelection = -1;
 
 var treeColor = pv.Colors.category19().by(function(d) {
 			switch (level(selectedOccupation)) {
@@ -273,7 +273,8 @@ treemap.leaf.add(pv.Panel)
 			treeSelection = d.index;
 			selectedOccupation.category = d.parentNode.nodeName;
 			selectedOccupation.subcategory = d.nodeName;
-			return this.root;
+			redrawMap();
+			return this;
 		});
 
 treemap.label.add(pv.Label)
@@ -290,12 +291,13 @@ treemap.label.add(pv.Label)
 function redrawMap() {
 	var selectBox = document.getElementById("measureSelect");
 	selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
-	//initializeVars();
+	initializeVars();
+	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
 	//stateLegend.render();
 	//statePanel.render();
-	//vis.render();
+	vis.render();
 	//statePanel.render();
-	window.location = "combined.html?measure=" + selectedMeasure;
+	//window.location = "combined.html?measure=" + selectedMeasure;
 }
 
 
