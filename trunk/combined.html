@@ -24,7 +24,7 @@
 		<div id="popupData"></div>
 		<div id="titleDescription"></div>
 		<form>
-			<select id ="measureSelect" onchange="redrawMap();">
+			<select id ="measureSelect" onchange="redrawMap(true, true);">
 				<option value="total">Total
 				<option value="annualMeanWage">Annual mean wage
 				<option value="ann10Wage">10th percentile wage
@@ -195,9 +195,7 @@ statePanel.add(pv.Panel)
 		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); geoHover = ""; return stateLabels; })
 		.event("click", function(d, l, c) {
 			selectedStateCode = c.code;
-			nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
-			treemap.reset();
-			treemap.render();
+			redrawMap(false,true);
 			return this;
 		});
 
@@ -275,7 +273,7 @@ treemap.leaf.add(pv.Panel)
 			treeSelection = d.index;
 			selectedOccupation.category = d.parentNode.nodeName;
 			selectedOccupation.subcategory = d.nodeName;
-			redrawMap();
+			redrawMap(true, false);
 			return this;
 		});
 
@@ -290,15 +288,25 @@ treemap.label.add(pv.Label)
 
 
 // BEGIN redraw code
-function redrawMap() {
-	var selectBox = document.getElementById("measureSelect");
-	selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
-	initializeVars();
-	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
-	vis.render();
-	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
-	treemap.reset();
-	treemap.render()
+function redrawMap(geomapChange, treemapChange) {
+	if (geomapChange && treemapChange) {
+		var selectBox = document.getElementById("measureSelect");
+		selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
+		initializeVars();
+		stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
+		vis.render();
+		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+		treemap.reset();
+		treemap.render()
+	} else if (geomapChange) {
+		initializeVars();
+		stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
+		statePanel.render();
+	} else if (treemapChange) {
+		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+		treemap.reset();
+		treemap.render()
+	}
 	//window.location = "combined.html?measure=" + selectedMeasure;
 }
 
