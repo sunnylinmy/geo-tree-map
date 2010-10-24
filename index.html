@@ -152,9 +152,9 @@ state.add(pv.Panel)
     .lineWidth(1)
     .strokeStyle("white")
     .antialias(false)
-    .event("mouseover", function(d,l,c) { this.fillStyle("blue"); return this; } )
-	.event("mouseout", function(d, l, c) {  this.fillStyle(color(getStateValue(c.code, majorCategory, minorCategory, measure))); return this;} )
-    .event("click", function(d,l,c) { setVisible('popupData', c.code); return this; } );
+    .event("mouseover", function(d,l,c) { setVisible('popupData', c.code, true); this.fillStyle("blue"); return this; } )
+	.event("mouseout", function(d, l, c) {  setVisible('popupData', c.code, false); this.fillStyle(color(getStateValue(c.code, majorCategory, minorCategory, measure))); return this;} )
+	.event("click", function(d, l,c) { alert("hello world"); return this; } );
 
 //Add a label with the state code in the middle of every state
 vis.add(pv.Label)
@@ -182,12 +182,9 @@ function redrawMap() {
 	var selectBox = document.getElementById("measureSelect");
 	measure = selectBox.options[selectBox.selectedIndex].value;
 	//initializeVars();
-
     //bars.render();
 	//state.render();
 	//vis.render();
-
-
 	//state.render();
 	window.location = "index.html?measure=" + measure;
 }

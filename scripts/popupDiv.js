@@ -1,10 +1,11 @@
 x = 0;
 y = 0;
-function setVisible(obj, data) {
+function setVisible(obj, data, show) {
   setTimeout("placeIt('popupData')",0); 
   obj = document.getElementById(obj);
-  if (obj.style.visibility == 'hidden' || obj.style.visibility == '') {
-    obj.style.visibility = 'visible'
+  //if (obj.style.visibility == 'hidden' || obj.style.visibility == '') {
+  if (show == true) {
+	obj.style.visibility = 'visible'
     if (level != 1) {
         var dataLbl = "Total % Employed: " + getStateValue(data, majorCategory, minorCategory, "total") + "%";   
     } else {
@@ -49,12 +50,14 @@ function init() {
   if (window.Event) {
      document.captureEvents(Event.CLICK);
   }
-  document.onclick = getCursorXY;
+  document.onmousemove = getCursorXY;
 }
 
 function getCursorXY(e) {
   x = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
   y = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+  x+=5;
+  y+=5;
 }
 
 function placeIt(obj) {
