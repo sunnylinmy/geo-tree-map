@@ -296,6 +296,9 @@ function redrawMap() {
 	initializeVars();
 	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
 	vis.render();
+	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+	treemap.reset();
+	treemap.render()
 	//window.location = "combined.html?measure=" + selectedMeasure;
 }
 
