@@ -68,9 +68,6 @@ var width = 800,
 		measureMaxVal = 0,
 		measureMinVal = 0;
 		
-var selectedStrokeColor = "red",
-    unselectedStrokeColor = "white";
-
 var geoScale;
 var intervalScale;		
 var geoColor;
@@ -151,8 +148,6 @@ function initializeVars() {
 }
 
 initializeVars();
-
-
 
 
 // Find the centroid for each state
@@ -253,13 +248,18 @@ var treemap = vis.add(pv.Layout.Treemap)
 		.padding(1);
 
 treemap.leaf.add(pv.Panel)
-		.fillStyle(function(d) { return d.index == treeHover ? treeColor(d).brighter() : treeColor(d); })
-		.strokeStyle(function(d) { return d.index == treeSelection ? selectedStrokeColor : unselectedStrokeColor })
+		.fillStyle(function(d) { return d.index == treeHover || d.index == treeSelection ? treeColor(d).brighter() : treeColor(d); })
+		.strokeStyle("rgba(255,255,255,0.3)")
 		.lineWidth(1)
 		.antialias(false)
 		.event("mouseover", function(d) { treeHover = d.index; return this; })
 		.event("mouseout", function() { treeHover = -1; return this; })
-		.event("click", function(d) { treeSelection = d.index; return this; });
+		.event("click", function(d) {
+			treeSelection = d.index;
+			selectedOccupation.category = d.parentNode.nodeName;
+			selectedOccupation.subcategory = d.nodeName;
+			return this.root;
+		});
 
 treemap.label.add(pv.Label)
 		.visible(function(d) {return d.parentNode && !d.parentNode.nodeName; })
@@ -268,10 +268,10 @@ treemap.label.add(pv.Label)
 		.textBaseline("top")
 		.left(function(d) { return d.x; })
 		.top(function(d) { return d.y; })
-		.text(function(d) { return d.nodeName.substring(0,d.dx/10) + "..."; });
+		.text(function(d) { return d.nodeName.substring(0,d.dx/8) + "..."; });
 
 
-// REDRAW STUFF
+// BEGIN redraw code
 function redrawMap() {
 	var selectBox = document.getElementById("measureSelect");
 	selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
@@ -284,7 +284,7 @@ function redrawMap() {
 }
 
 
-// DRAW IT!
+// draw the vis
 vis.render();
 
 			</script>
