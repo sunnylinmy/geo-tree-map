@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<!-- Set the character encoding -->
-		<meta charset="UTF-8">
+		<meta charset="UTF-8" />
 		
 		<!-- CSS -->
 		<link type="text/css" rel="stylesheet" href="style.css" />
@@ -25,13 +25,13 @@
 		<div id="titleDescription"></div>
 		<form>
 			<select id ="measureSelect" onchange="redrawMap(true, true);">
-				<option value="total">Total
-				<option value="annualMeanWage">Annual mean wage
-				<option value="ann10Wage">10th percentile wage
-				<option value="ann25Wage">25th percentile wage
-				<option value="ann50Wage">50th percentile wage
-				<option value="ann75Wage">75th percentile wage
-				<option value="ann90Wage">90th percentile wage
+				<option value="total">Total</option>
+				<option value="annualMeanWage">Annual mean wage</option>
+				<option value="ann10Wage">10th percentile wage</option>
+				<option value="ann25Wage">25th percentile wage</option>
+				<option value="ann50Wage">50th percentile wage</option>
+				<option value="ann75Wage">75th percentile wage</option>
+				<option value="ann90Wage">90th percentile wage</option>
 			</select>
 		</form>
 		
@@ -112,8 +112,8 @@ function getAllValues(measure, occupation, stateCode) {
 
 // TODO: don't change globals as side effect of function
 function findMaxMinValue(occupation, measure) {
-	measureMaxVal = -1;
-	measureMinVal = 1000000000000;
+	measureMaxVal = -Infinity;
+	measureMinVal = Infinity;
 	var levelOccupationData = stateOccupationData[measure + "_" + level(occupation)];
 	
 	for (var key in levelOccupationData) {
@@ -238,8 +238,31 @@ stateLegend = vis.add(pv.Bar)
 function getNodes() {
 	return nodes;
 }
-var treeHover = -1,
-	treeSelection = -1;
+
+function occupationForNode(node) {
+	var occupation = {category:"", subcategory:""};
+	
+	if (node) {
+		if (node.parentNode && node.parentNode.parentNode) {
+			occupation.category = node.parentNode.nodeName;
+			occupation.subcategory = node.nodeName;
+		} else if (node.parentNode) {
+			occupation.category = node.nodeName;
+		}
+	}
+		
+	return occupation;
+}
+
+function occupationsAreEqual(o1, o2) {
+	return o1.category == o2.category && o1.subcategory == o2.subcategory;
+}
+
+function occupationMatchesNode(occupation, node) {
+	return occupationsAreEqual(occupation, occupationForNode(node));
+}
+
+var treeHover = {category:"",subcategory:""};
 
 var treeColor = pv.Colors.category19().by(function(d) {
 			switch (level(selectedOccupation)) {
@@ -263,22 +286,22 @@ var treemap = vis.add(pv.Layout.Treemap)
 		.padding(1);
 
 treemap.leaf.add(pv.Panel)
-		.fillStyle(function(d) { return d.index == treeHover || d.index == treeSelection ? treeColor(d).brighter() : treeColor(d); })
+		.fillStyle(function(d) { return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? treeColor(d).brighter() : treeColor(d); })
 		.strokeStyle("rgba(255,255,255,0.3)")
 		.lineWidth(1)
 		.antialias(false)
-		.event("mouseover", function(d) { treeHover = d.index; return this; })
-		.event("mouseout", function() { treeHover = -1; return this; })
+		.event("mouseover", function(d) { treeHover = occupationForNode(d); return this; })
+		.event("mouseout", function() { treeHover = occupationForNode(undefined); return this; })
 		.event("click", function(d) {
-			treeSelection = d.index;
-			selectedOccupation.category = d.parentNode.nodeName;
-			selectedOccupation.subcategory = d.nodeName;
+			selectedOccupation = occupationForNode(d);
+			console.log(d);
+			console.log(selectedOccupation);
 			redrawMap(true, false);
 			return this;
 		});
 
 treemap.label.add(pv.Label)
-		.visible(function(d) {return d.parentNode && !d.parentNode.nodeName; })
+		.visible(function(d) {return level(occupationForNode(d)) == 2; })
 		.textAngle(0)
 		.textAlign("left")
 		.textBaseline("top")
