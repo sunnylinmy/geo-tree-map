@@ -67,6 +67,9 @@ var width = 800,
 		treeHeight = 400,
 		measureMaxVal = 0,
 		measureMinVal = 0;
+		
+var selectedStrokeColor = "red",
+    unselectedStrokeColor = "white";
 
 var geoScale;
 var intervalScale;		
@@ -162,9 +165,9 @@ us_lowres.forEach(function(c) {
 // Add the main panel
 var vis = new pv.Panel()
 		.width(width)
-		.height(geoHeight + treeHeight)
+		.height(geoHeight + treeHeight + 60)
 		.top(30)
-		.bottom(20);
+		.bottom(0);
 
 
 // BEGIN GEO MAP
@@ -200,9 +203,6 @@ vis.add(pv.Label)
 		.textBaseline("middle");
 
 // Add the color bars for the color legend
-console.log("measureMinVal: " + measureMinVal);
-console.log("measureMaxVal: " + measureMaxVal);
-console.log("intervalScale: " + intervalScale);
 var bars = vis.add(pv.Bar)
 		.data(pv.range(measureMinVal, measureMaxVal, intervalScale))
 		.bottom(function(d) { return this.index * 12 + 40 + treeHeight + 30; })
@@ -221,13 +221,8 @@ var bars = vis.add(pv.Bar)
 var treeHover = -1,
 		treeSelection = -1;
 
-console.log("selectedMeasure: " + selectedMeasure);
-console.log("selectedOccupation.category: " + selectedOccupation.category);
-console.log("selectedOccupation.subcategory: " + selectedOccupation.subcategory);
-console.log("selectedStateCode: " + selectedStateCode);
-
 var treeColor = pv.Colors.category19().by(function(d) {
-			switch (level) {
+			switch (level(selectedOccupation)) {
 				case 1:
 				case 2:
 					return d.nodeName;
@@ -249,11 +244,12 @@ var treemap = vis.add(pv.Layout.Treemap)
 
 treemap.leaf.add(pv.Panel)
 		.fillStyle(function(d) { return d.index == treeHover ? treeColor(d).brighter() : treeColor(d); })
-		.strokeStyle("white")
+		.strokeStyle(function(d) { return d.index == treeSelection ? selectedStrokeColor : unselectedStrokeColor })
 		.lineWidth(1)
 		.antialias(false)
 		.event("mouseover", function(d) { treeHover = d.index; return this; })
-		.event("mouseout", function() { treeHover = -1; return this; });
+		.event("mouseout", function() { treeHover = -1; return this; })
+		.event("click", function(d) { treeSelection = d.index; return this; });
 
 treemap.label.add(pv.Label)
 		.visible(function(d) {return d.parentNode && !d.parentNode.nodeName; })
@@ -274,7 +270,7 @@ function redrawMap() {
 	//statePanel.render();
 	//vis.render();
 	//statePanel.render();
-	window.location = "index.html?measure=" + selectedMeasure;
+	window.location = "combined.html?measure=" + selectedMeasure;
 }
 
 
