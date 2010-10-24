@@ -9,9 +9,8 @@
 		
 		<!-- Javascript -->
 		<script type="text/javascript" src="scripts/protovis-r3.2.js"></script>
-		<script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="scripts/centroid.js"></script>
-		<script type="text/javascript" src="scripts/us_lowres.js"></script>	 
+		<script type="text/javascript" src="scripts/us_lowres.js"></script>
 		<script type="text/javascript" src="scripts/popupDiv.js"></script>
 		<script type="text/javascript" src="stateOccupationData.js"></script>
 		<script type="text/javascript" src="scripts/titleDescription.js"></script>		
@@ -167,8 +166,14 @@ var vis = new pv.Panel()
 
 // BEGIN GEO MAP
 
+var geoHover = "";
+
+var statePanel,
+		stateLabels,
+		stateLegend;
+
 // Add a panel for each state
-var statePanel = vis.add(pv.Panel)
+statePanel = vis.add(pv.Panel)
 		.data(us_lowres)
 		.width(width)
 		.height(geoHeight);
@@ -180,25 +185,35 @@ statePanel.add(pv.Panel)
 		.data(function(l) { return l })
 		.left(geoScale.x)
 		.top(geoScale.y)
-		.fillStyle(function(d, l, c) { return geoColor(getValue(c.code, selectedOccupation, selectedMeasure)) })
+		.fillStyle(function(d, l, c) {
+			return geoColor(getValue(c.code, selectedOccupation, selectedMeasure));
+		})
 		.lineWidth(1)
 		.strokeStyle("white")
 		.antialias(false)
-		.event("mouseover", function(d,l,c) { setVisible('popupData', c, selectedOccupation, true); this.fillStyle("blue"); return this; } )
-		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); this.fillStyle(geoColor(getValue(c.code, selectedOccupation, selectedMeasure))); return this;} )
-		.event("click", function(d, l,c) { alert("hello world"); return this; } );
+		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true); geoHover = c.code; return stateLabels; })
+		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); geoHover = ""; return stateLabels; })
+		.event("click", function(d, l, c) {
+			selectedStateCode = c.code;
+			nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+			treemap.nodes(nodes);
+			treemap.render();
+			return this;
+		});
 
-//Add a label with the state code in the middle of every state
-vis.add(pv.Label)
+// Add a label with the state code in the middle of every state
+stateLabels = vis.add(pv.Label)
 		.data(us_lowres)
 		.left(function(c) { return geoScale(c.centLatLon).x })
 		.top(function(c) { return geoScale(c.centLatLon).y })
 		.text(function(c) { return c.code })
 		.textAlign("center")
-		.textBaseline("middle");
+		.textBaseline("middle")
+		.textStyle(function(c) { return (geoHover == c.code || selectedStateCode == c.code) ? "red" : "black"; })
+		.font(function(c) { return (geoHover == c.code || selectedStateCode == c.code) ? "bold 10px sans-serif" : "10px sans-serif"; });
 
 // Add the color bars for the color legend
-var bars = vis.add(pv.Bar)
+stateLegend = vis.add(pv.Bar)
 		.data(pv.range(measureMinVal, measureMaxVal, intervalScale))
 		.bottom(function(d) { return this.index * 12 + 40 + treeHeight + 30; })
 		.height(10)
@@ -276,7 +291,7 @@ function redrawMap() {
 	var selectBox = document.getElementById("measureSelect");
 	selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
 	//initializeVars();
-	//bars.render();
+	//stateLegend.render();
 	//statePanel.render();
 	//vis.render();
 	//statePanel.render();
