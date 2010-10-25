@@ -96,7 +96,11 @@ function getValue(stateCode, occupation, measure) {
 		
 		// get the correct subcategory
 		if (occupation.subcategory) {
-			arrVal = arrVal[occupation.subcategory];
+			if (arrVal) {
+				arrVal = arrVal[occupation.subcategory];
+			} else {
+				arrVal = -1;
+			}
 		}
 		
 		return arrVal;
@@ -122,9 +126,12 @@ function findMaxMinValue(occupation, measure) {
 			arrVal = arrVal[occupation.category];
 		}
 		if (occupation.subcategory) {
-			arrVal = arrVal[occupation.subcategory];
+			if (arrVal) {
+				arrVal = arrVal[occupation.subcategory];
+			} else {
+				arrVal = -1;
+			}
 		}
-
 		if (arrVal > measureMaxVal && arrVal >= 0) {
 			measureMaxVal = arrVal
 		}
