@@ -23,7 +23,6 @@
 		<!-- Data on demand popup window -->
 		<div id="popupData"></div>
 		<div id="titleDescription"></div>
-		<form>
 			<select id ="measureSelect" onchange="redrawMap(true, true);">
 				<option value="total">Total</option>
 				<option value="annualMeanWage">Annual mean wage</option>
@@ -33,33 +32,21 @@
 				<option value="ann75Wage">75th percentile wage</option>
 				<option value="ann90Wage">90th percentile wage</option>
 			</select>
-		</form>
+			<select id ="categorySelect" onchange="redrawMap(true, true);">
+				<option value="categories">Categories</option>
+				<option value="subcategories" selected="selected">Sub-Categories</option>
+			</select>
 		
 		<!-- Protovis rendering -->
 		<div id="fig">
 			<script type="text/javascript">
-		
+			
 var selectedOccupation = {
 			category:"Management occupations",
 			subcategory:"Chief executives"
 		},
 		selectedStateCode = "CA",
 		selectedMeasure = "total";
-
-function init() {
-	var currentTagTokens = window.location.toString().split("?" );
-	for ( var i = 1; i < currentTagTokens.length; i++ ) {
-		var currentTag = currentTagTokens[i];
-		var property = currentTag.substr(0, currentTag.indexOf('='));
-		var value = currentTag.substr(currentTag.indexOf('=') + 1);
-		if (property == "measure") {
-			var selectBox = document.getElementById("measureSelect");
-			selectedMeasure = value;
-			selectBox.value = value;
-		}
-	}
-}
-init();
 
 var width = 800,
 		geoHeight = 400,
@@ -320,6 +307,22 @@ function redrawMap(geomapChange, treemapChange) {
 	if (geomapChange && treemapChange) {
 		var selectBox = document.getElementById("measureSelect");
 		selectedMeasure = selectBox.options[selectBox.selectedIndex].value;
+		selectBox = document.getElementById("categorySelect");
+		selectedCategoryGroup = selectBox.options[selectBox.selectedIndex].value;
+		if (selectedCategoryGroup == "subcategories") {
+			var arrVal = stateOccupationData[selectedMeasure + "_" + 3];
+			var arrVal = arrVal[selectedStateCode];
+			if (selectedOccupation.category) {
+				arrVal = arrVal[selectedOccupation.category];
+			}
+			for (key in arrVal) {
+				selectedOccupation.subcategory = key; 
+				break;
+			}
+			
+		} else {
+			selectedOccupation.subcategory = undefined;
+		}
 		updateGeomap();
 		updateTreemap();
 	} else if (geomapChange) {
