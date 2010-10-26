@@ -315,8 +315,8 @@ function redrawMap(geomapChange, treemapChange) {
 			if (selectedOccupation.category) {
 				arrVal = arrVal[selectedOccupation.category];
 			}
-			for (key in arrVal) {
-				selectedOccupation.subcategory = key; 
+			for (nextSubcategory in arrVal) {
+				selectedOccupation.subcategory = nextSubcategory; 
 				break;
 			}
 			
