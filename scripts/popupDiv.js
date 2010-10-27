@@ -1,5 +1,6 @@
 x = 0;
 y = 0;
+
 function setVisible(obj, state, occupation, show) {
 	setTimeout("placeIt('popupData')",0); 
 	obj = document.getElementById(obj);
