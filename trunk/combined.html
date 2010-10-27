@@ -32,7 +32,7 @@
 				<option value="ann75Wage">75th percentile wage</option>
 				<option value="ann90Wage">90th percentile wage</option>
 			</select>
-			<select id ="categorySelect" onchange="redrawMap(true, true);">
+			<select id="categorySelect" onchange="redrawMap(true, true);">
 				<option value="categories">Categories</option>
 				<option value="subcategories" selected="selected">Sub-Categories</option>
 			</select>
@@ -42,10 +42,10 @@
 			<script type="text/javascript">
 			
 var selectedOccupation = {
-			category:"Management occupations",
-			subcategory:"Chief executives"
+			category:"Computer and mathematical science occupations",
+			subcategory:"Computer software engineers - applications"
 		},
-		selectedStateCode = "CA",
+		selectedState = us_lowres[14],
 		selectedMeasure = "total";
 
 var width = 800,
@@ -160,7 +160,7 @@ var vis = new pv.Panel()
 
 // BEGIN GEO MAP
 
-var geoHover = "";
+var geoHover = {};
 
 var statePanel,
 		stateLabels,
@@ -185,12 +185,12 @@ statePanel.add(pv.Panel)
 		.lineWidth(1)
 		.strokeStyle("white")
 		.antialias(false)
-		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true); geoHover = c.code; return stateLabels; })
-		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); geoHover = ""; return stateLabels; })
+		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true); geoHover = c; return stateLabels; })
+		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); geoHover = {}; return stateLabels; })
 		.event("click", function(d, l, c) {
-			selectedStateCode = c.code;
+			selectedState.code = c.code;
 			redrawMap(false,true);
-			return this;
+			return stateLabels;
 		});
 
 // Add a label with the state code in the middle of every state
@@ -201,8 +201,16 @@ stateLabels = vis.add(pv.Label)
 		.text(function(c) { return c.code })
 		.textAlign("center")
 		.textBaseline("middle")
-		.textStyle(function(c) { return (geoHover == c.code || selectedStateCode == c.code) ? "red" : "black"; })
-		.font(function(c) { return (geoHover == c.code || selectedStateCode == c.code) ? "bold 10px sans-serif" : "10px sans-serif"; });
+		.textStyle(function(c) {
+			if (selectedState.code == c.code) {
+				return "red";
+			} else if(geoHover.code == c.code) {
+				return "blue";
+			} else {
+				return "black";
+			}
+		})
+		.font(function(c) { return (geoHover.code == c.code || selectedState.code == c.code) ? "bold 10px sans-serif" : "10px sans-serif"; });
 
 // Add the color bars for the color legend
 stateLegend = vis.add(pv.Bar)
@@ -269,7 +277,7 @@ var treeColor = pv.Colors.category19().by(function(d) {
 					break;
 			}
 		}),
-		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+		nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedState.code)).nodes();
 
 var treemap = vis.add(pv.Layout.Treemap)
 		.width(width)
@@ -284,8 +292,8 @@ treemap.leaf.add(pv.Panel)
 		.strokeStyle("rgba(255,255,255,0.3)")
 		.lineWidth(1)
 		.antialias(false)
-		.event("mouseover", function(d) { treeHover = occupationForNode(d); return this; })
-		.event("mouseout", function() { treeHover = occupationForNode(undefined); return this; })
+		.event("mouseover", function(d) { setVisible('popupData', selectedState, occupationForNode(d), true); treeHover = occupationForNode(d); return this; })
+		.event("mouseout", function(d) { setVisible('popupData', selectedState, occupationForNode(d), false); treeHover = occupationForNode(undefined); return this; })
 		.event("click", function(d) {
 			selectedOccupation = occupationForNode(d);
 			redrawMap(true, false);
@@ -311,7 +319,7 @@ function redrawMap(geomapChange, treemapChange) {
 		selectedCategoryGroup = selectBox.options[selectBox.selectedIndex].value;
 		if (selectedCategoryGroup == "subcategories") {
 			var arrVal = stateOccupationData[selectedMeasure + "_" + 3];
-			var arrVal = arrVal[selectedStateCode];
+			var arrVal = arrVal[selectedState.code];
 			if (selectedOccupation.category) {
 				arrVal = arrVal[selectedOccupation.category];
 			}
@@ -338,7 +346,7 @@ function updateGeomap() {
 }
 
 function updateTreemap() {
-	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedStateCode)).nodes();
+	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedState.code)).nodes();
 	treemap.reset();
 	treemap.render()
 }
