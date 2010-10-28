@@ -2,7 +2,8 @@ x = 0;
 y = 0;
 
 function setVisible(obj, state, occupation, show) {
-	setTimeout("placeIt('popupData')",0); 
+	//setTimeout("placeIt('popupData')",0); 
+	placeIt('popupData');
 	obj = document.getElementById(obj);
 	if (show == true) {
 		obj.style.visibility = 'visible'
@@ -50,6 +51,14 @@ function setVisible(obj, state, occupation, show) {
 		obj.appendChild(ann75WageLabel);
 		obj.appendChild(document.createElement('br'));
 		obj.appendChild(ann90WageLabel);
+		
+		if (y > 415) {
+			var newHeight = obj.offsetHeight;
+			var currentTop = obj.style.top.substring(0, obj.style.top.length - 2);
+
+			obj.style.top = (currentTop - newHeight) + 'px';
+		}
+		
 	} else {
 		obj.style.visibility = 'hidden';
 	}
