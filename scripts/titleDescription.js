@@ -49,7 +49,7 @@ function setTreemapTitleDescription(obj, measure, state) {
 	var line3 = ""; // occupation title
 	
 	if (measure == "total") {
-		line1 = "Distribution of workforce";
+		line1 = "Workforce distribution";
 	} else if (measure == "annualMeanWage") {
 		line1 = "Annual mean wages";	
 	} else if (measure == "ann10Wage") {
