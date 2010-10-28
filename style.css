@@ -6,8 +6,18 @@ body {
 	background-color: #ccc;
 }
 
+#visTitle {
+	width: 1261px;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid gray;
+	font: 16pt "Helvetica Neue", sans-serif;
+	font-weight: bold;
+	padding: 15px;
+	background-color: #eee;
+}
+
 #container {
-	width: 1302px;
+	width: 1292px;
 }
 
 /* Hover popup styling */
@@ -29,7 +39,7 @@ body {
 /* Three main panels */
 #leftPanel {
 	float: left;
-	width: 210px;
+	width: 200px;
 	height: 730px;
 	padding: 0 15px 15px 15px;
 	background-color: white;
@@ -60,40 +70,47 @@ body {
 /* titles in the left panel */
 .mapTitle {
 	position: absolute;
-  width: 210px;
+  width: 200px;
   
   vertical-align: middle;
   
   padding: 0;
   margin: 0;
 	
-  font-size: 14pt;
+  font-size: 12pt;
   line-height: 1.1em;
   font-weight: bold;
 }
 
 .line1 {
-	width: 210px;
+	width: 200px;
 }
 
 .line2 {
-	width: 210px;
+	width: 200px;
 	padding: 10px 0;
 }
 
 .line3 {
-	width: 210px;
+	width: 200px;
 }
 
 #geoTitle {
-	top: 20px;
+	top: 75px;
 }
 
 #treeTitle {
-	top: 430px;
+	top: 485px;
 }
 
 /* titles in the right panel */
 h1 {
-	font-size: 14pt;
+	font-size: 12pt;
+}
+
+#designers {
+	padding-top: 10px;
+	font-size: 8pt;
+	color: gray;
+	text-align: right;
 }
