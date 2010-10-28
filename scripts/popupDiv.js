@@ -1,6 +1,6 @@
 function setVisible(obj, state, occupation, show, treemapNode) {
 	obj = document.getElementById(obj);
-	if (show == true) {
+	if (show == true && getValue(state.code, occupation, selectedMeasure) != -1 && getValue(state.code, occupation, selectedMeasure) != undefined) {
 		obj.style.visibility = 'visible'
 		if (level(occupation) != 1) {
 			var dataLbl = "Total % Employed: " + getValue(state.code, occupation, "total") + "%";		
