@@ -354,7 +354,7 @@ function redrawMap(geomapChange, treemapChange) {
 function updateGeomap() {
 	initializeVars();
 	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
-	//stateLegend.render();
+	stateLegend.render();
 	statePanel.render();
 }
 
@@ -362,7 +362,7 @@ function updateTreemap() {
 	setTreemapTitleDescription("treeTitle", selectedMeasure, selectedState);
 	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedState.code)).nodes();
 	treemap.reset();
-	treemap.render()
+	treemap.render();
 }
 
 // draw the vis
@@ -374,7 +374,7 @@ vis.render();
 		<!-- Right panel with options, about, and source info -->
 		<div id="rightPanel">
 			<select id ="measureSelect" onchange="redrawMap(true, true);">
-				<option value="total">Total</option>
+				<option value="total" selected="selected">Total</option>
 				<option value="annualMeanWage">Annual mean wage</option>
 				<option value="ann10Wage">10th percentile wage</option>
 				<option value="ann25Wage">25th percentile wage</option>
