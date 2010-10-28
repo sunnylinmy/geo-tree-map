@@ -7,7 +7,7 @@ body {
 }
 
 #container {
-	width: 1292px;
+	width: 1302px;
 }
 
 /* Hover popup styling */
@@ -29,7 +29,7 @@ body {
 /* Three main panels */
 #leftPanel {
 	float: left;
-	width: 200px;
+	width: 210px;
 	height: 730px;
 	padding: 0 15px 15px 15px;
 	background-color: white;
@@ -60,29 +60,29 @@ body {
 /* titles in the left panel */
 .mapTitle {
 	position: absolute;
-  width: 200px;
+  width: 210px;
   
   vertical-align: middle;
   
   padding: 0;
   margin: 0;
 	
-  font-size: 16pt;
+  font-size: 14pt;
   line-height: 1.1em;
   font-weight: bold;
 }
 
 .line1 {
-	width: 200px;
+	width: 210px;
 }
 
 .line2 {
-	width: 200px;
+	width: 210px;
 	padding: 10px 0;
 }
 
 .line3 {
-	width: 200px;
+	width: 210px;
 }
 
 #geoTitle {
