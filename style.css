@@ -27,24 +27,26 @@ body {
 	float: left;
 	width: 200px;
 	height: 730px;
-	padding: 0 15px;
+	padding: 0 15px 15px 15px;
 	background-color: white;
+	border-bottom: 1px solid black;
 }
 
 #fig {
 	float: left;
   width: 800px;
   height: 730px;
-	padding: 0 15px;
+	padding: 0 15px 15px 15px;
 	background-color: white;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
 }
 
 #rightPanel {
 	float: left;
 	width: 200px;
 	height: 730px;
-	border-left: 1px solid black;
-	padding: 0 15px;
+	padding: 0 15px 15px 15px;
 }
 
 /* titles in the left panel */
@@ -52,10 +54,13 @@ body {
 	position: absolute;
   width: 200px;
   
-  padding: 0;
+  vertical-align: middle;
+  
+  padding: 10px 0;
   margin: 0;
 	
   font-size: 14pt;
+  line-height: 1.1em;
 }
 
 .line1 {
@@ -64,7 +69,6 @@ body {
 
 .line2 {
 	width: 200px;
-	font-size: 12pt;
 	padding: 10px 0;
 }
 
@@ -73,9 +77,10 @@ body {
 }
 
 #geoTitle {
-	top: 10px;
+	height: 380;
 }
 
 #treeTitle {
 	top: 430px;
+	height: 280px;
 }
