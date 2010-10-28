@@ -8,6 +8,7 @@ body {
 
 #visTitle {
 	width: 1261px;
+	height: 26px;
 	border-right: 1px solid gray;
 	border-bottom: 1px solid gray;
 	font: 16pt "Helvetica Neue", sans-serif;
