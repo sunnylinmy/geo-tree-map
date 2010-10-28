@@ -8,7 +8,7 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		
 		<!-- Javascript -->
-		<script type="text/javascript" src="scripts/protovis-r3.2.js"></script>
+		<script type="text/javascript" src="scripts/protovis-d3.2.js"></script>
 		<script type="text/javascript" src="scripts/centroid.js"></script>
 		<script type="text/javascript" src="scripts/us_lowres.js"></script>
 		<script type="text/javascript" src="scripts/popupDiv.js"></script>
@@ -139,9 +139,9 @@ function initializeVars() {
 	setTitleDescription("geoTitle", selectedMeasure, selectedOccupation);
 	findMaxMinValue(selectedOccupation, selectedMeasure);
 	
-	intervalScale = (measureMaxVal - measureMinVal)/5;		
+	intervalScale = (measureMaxVal - measureMinVal)/5;
+	intervalScale = parseFloat(intervalScale.toFixed(2));
 	geoColor = pv.Scale.linear(measureMinVal, (measureMinVal + measureMaxVal)/2, measureMaxVal).range("#F7FCB9", "#78C679", "#006837");
-
 }
 
 initializeVars();
@@ -222,7 +222,7 @@ stateLegend = vis.add(pv.Bar)
 		.bottom(function(d) { return this.index * 12 + 40 + treeHeight + 30; })
 		.height(10)
 		.width(10)
-		.left(width-100)
+		.left(width-120)
 		.fillStyle(function(d) { return geoColor(measureMinVal + intervalScale * this.index) })
 		.lineWidth(null)
 	.anchor("right").add(pv.Label)
@@ -232,12 +232,22 @@ stateLegend = vis.add(pv.Bar)
 			var textRangeMax = (d + intervalScale);
 			if (intervalScale < 1) { 
 				textRangeMin = textRangeMin.toPrecision(2); 
-				textRangeMax = textRangeMax.toPrecision(2); } 
-			else {
+				textRangeMax = textRangeMax.toPrecision(2);
+			} else {
 				textRangeMin = parseInt(textRangeMin); 
 				textRangeMax = parseInt(textRangeMax); 
-			} 
-			return textRangeMin + " - " + textRangeMax + "" });
+			}
+			
+			if (selectedMeasure == "total") {
+				textRangeMin += '%';
+				textRangeMax += '%';
+			} else {
+				textRangeMin = '$' + textRangeMin;
+				textRangeMax = '$' + textRangeMax;
+			}
+			
+			return textRangeMin + " – " + textRangeMax + "";
+		});
 
 
 // BEGIN TREEMAP
@@ -353,7 +363,14 @@ function redrawMap(geomapChange, treemapChange) {
 }
 function updateGeomap() {
 	initializeVars();
-	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
+	
+	console.log(measureMinVal);
+	console.log(measureMaxVal);
+	console.log(intervalScale);
+	
+	var newLegendData = pv.range(measureMinVal, measureMaxVal, intervalScale);
+	console.log(newLegendData);
+	stateLegend.data(newLegendData);
 	stateLegend.render();
 	statePanel.render();
 }
