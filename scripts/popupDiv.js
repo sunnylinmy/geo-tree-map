@@ -1,9 +1,4 @@
-x = 0;
-y = 0;
-
-function setVisible(obj, state, occupation, show) {
-	//setTimeout("placeIt('popupData')",0); 
-	placeIt('popupData');
+function setVisible(obj, state, occupation, show, treemapNode) {
 	obj = document.getElementById(obj);
 	if (show == true) {
 		obj.style.visibility = 'visible'
@@ -52,11 +47,15 @@ function setVisible(obj, state, occupation, show) {
 		obj.appendChild(document.createElement('br'));
 		obj.appendChild(ann90WageLabel);
 		
-		if (y > 415) {
+		if (treemapNode) {
+			obj.style.left = treemapNode.x + treemapNode.dx/2 + 230 + 'px';
 			var newHeight = obj.offsetHeight;
-			var currentTop = obj.style.top.substring(0, obj.style.top.length - 2);
-
+			var currentTop = treemapNode.y + treemapNode.dy/2 + 430;
 			obj.style.top = (currentTop - newHeight) + 'px';
+
+		} else {
+			obj.style.left = (geoScale(state.centLatLon).x + 235) +  'px';
+			obj.style.top = geoScale(state.centLatLon).y + 'px';	
 		}
 		
 	} else {
@@ -64,31 +63,8 @@ function setVisible(obj, state, occupation, show) {
 	}
 }
 
-function init() {
-	setTimeout("placeIt('popupData')",0); 
-	if (window.Event) {
-		 document.captureEvents(Event.CLICK);
-	}
-	document.onmousemove = getCursorXY;
-}
-
-function getCursorXY(e) {
-	x = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-	y = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-	x+=5;
-	y+=5;
-}
-
-function placeIt(obj) {
-	obj = document.getElementById(obj);
-	obj.style.left = x + 'px' ;
-	obj.style.top = y + 'px' ;
-}
-
 function clearContainer(container) {
 	while (container.hasChildNodes()) {
 		container.removeChild(container.lastChild);
 	}
 }
-
-window.onload = init;

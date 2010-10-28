@@ -64,7 +64,6 @@ pv.Colors.category24 = function() {
 
 function level(occupation) {
 	var level = 1;
-	
 	if(occupation.subcategory) {
 		level = 3;
 	} else if(occupation.category) {
@@ -141,7 +140,8 @@ function initializeVars() {
 	findMaxMinValue(selectedOccupation, selectedMeasure);
 	
 	intervalScale = (measureMaxVal - measureMinVal)/5;		
-	geoColor = pv.Scale.linear(measureMinVal, measureMaxVal,(measureMaxVal - measureMinVal)/10).range("lightgreen","forestgreen");
+	geoColor = pv.Scale.linear(measureMinVal, (measureMinVal + measureMaxVal)/2, measureMaxVal).range("#F7FCB9", "#78C679", "#006837");
+
 }
 
 initializeVars();
@@ -189,8 +189,8 @@ statePanel.add(pv.Panel)
 		.lineWidth(1)
 		.strokeStyle("white")
 		.antialias(false)
-		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true); geoHover = c; return stateLabels; })
-		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false); geoHover = {}; return stateLabels; })
+		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true, undefined); geoHover = c; return stateLabels; })
+		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false, undefined); geoHover = {}; return stateLabels; })
 		.event("click", function(d, l, c) {
 			selectedState.code = c.code;
 			redrawMap(false,true);
@@ -211,7 +211,7 @@ stateLabels = vis.add(pv.Label)
 			} else if(geoHover.code == c.code) {
 				return "blue";
 			} else {
-				return "black";
+				return "gray";
 			}
 		})
 		.font(function(c) { return (geoHover.code == c.code || selectedState.code == c.code) ? "bold 10px sans-serif" : "10px sans-serif"; });
@@ -302,8 +302,8 @@ treemap.leaf.add(pv.Panel)
 		.strokeStyle("rgba(255,255,255,0.3)")
 		.lineWidth(1)
 		.antialias(false)
-		.event("mouseover", function(d) { setVisible('popupData', selectedState, occupationForNode(d), true); treeHover = occupationForNode(d); return this; })
-		.event("mouseout", function(d) { setVisible('popupData', selectedState, occupationForNode(d), false); treeHover = occupationForNode(undefined); return this; })
+		.event("mouseover", function(d) { setVisible('popupData', selectedState, occupationForNode(d), true, d); treeHover = occupationForNode(d); return this; })
+		.event("mouseout", function(d) { setVisible('popupData', selectedState, occupationForNode(d), false, d); treeHover = occupationForNode(undefined); return this; })
 		.event("click", function(d) {
 			selectedOccupation = occupationForNode(d);
 			redrawMap(true, false);
@@ -352,6 +352,7 @@ function redrawMap(geomapChange, treemapChange) {
 function updateGeomap() {
 	initializeVars();
 	stateLegend.data(pv.range(measureMinVal, measureMaxVal, intervalScale));
+	//stateLegend.render();
 	statePanel.render();
 }
 
