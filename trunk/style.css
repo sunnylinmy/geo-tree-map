@@ -6,6 +6,10 @@ body {
 	background-color: #eee;
 }
 
+#container {
+	width: 1291px;
+}
+
 /* Hover popup styling */
 #popupData {
   position: absolute;
