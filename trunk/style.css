@@ -3,11 +3,11 @@ body {
   height: 100%;
   width: 100%;
   font: 14px/125% "Helvetica Neue", sans-serif;
-	background-color: #eee;
+	background-color: #ccc;
 }
 
 #container {
-	width: 1291px;
+	width: 1292px;
 }
 
 /* Hover popup styling */
@@ -33,7 +33,7 @@ body {
 	height: 730px;
 	padding: 0 15px 15px 15px;
 	background-color: white;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid gray;
 }
 
 #fig {
@@ -42,8 +42,8 @@ body {
   height: 730px;
 	padding: 0 15px 15px 15px;
 	background-color: white;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
+	border-bottom: 1px solid gray;
+	border-right: 1px solid gray;
 }
 
 #rightPanel {
@@ -51,6 +51,10 @@ body {
 	width: 200px;
 	height: 730px;
 	padding: 0 15px 15px 15px;
+	background-color: #eee;
+	border-bottom: 1px solid gray;
+	border-right: 1px solid gray;
+	font-size: 10pt;
 }
 
 /* titles in the left panel */
@@ -60,11 +64,12 @@ body {
   
   vertical-align: middle;
   
-  padding: 10px 0;
+  padding: 0;
   margin: 0;
 	
-  font-size: 14pt;
+  font-size: 16pt;
   line-height: 1.1em;
+  font-weight: bold;
 }
 
 .line1 {
@@ -81,9 +86,14 @@ body {
 }
 
 #geoTitle {
+	top: 20px;
 }
 
 #treeTitle {
 	top: 430px;
-	height: 280px;
+}
+
+/* titles in the right panel */
+h1 {
+	font-size: 14pt;
 }

@@ -368,12 +368,7 @@ function redrawMap(geomapChange, treemapChange) {
 function updateGeomap() {
 	initializeVars();
 	
-	console.log(measureMinVal);
-	console.log(measureMaxVal);
-	console.log(intervalScale);
-	
 	var newLegendData = pv.range(measureMinVal, measureMaxVal, intervalScale).slice(0,numBoxesInLegend);
-	console.log(newLegendData);
 	stateLegend.data(newLegendData);
 	stateLegend.render();
 	statePanel.render();
@@ -394,19 +389,37 @@ vis.render();
 		
 		<!-- Right panel with options, about, and source info -->
 		<div id="rightPanel">
-			<select id ="measureSelect" onchange="redrawMap(true, true);">
-				<option value="total" selected="selected">Total</option>
-				<option value="annualMeanWage">Annual mean wage</option>
-				<option value="ann10Wage">10th percentile wage</option>
-				<option value="ann25Wage">25th percentile wage</option>
-				<option value="ann50Wage">50th percentile wage</option>
-				<option value="ann75Wage">75th percentile wage</option>
-				<option value="ann90Wage">90th percentile wage</option>
-			</select>
-			<select id="categorySelect" onchange="redrawMap(true, true);">
-				<option value="categories">Categories</option>
-				<option value="subcategories" selected="selected">Sub-Categories</option>
-			</select>
+			<h1>Measure</h1>
+			<div>
+				<select id ="measureSelect" onchange="redrawMap(true, true);">
+					<option value="total" selected="selected">Workforce distribution</option>
+					<option value="annualMeanWage">Annual mean wage</option>
+					<option value="ann10Wage">10th percentile wage</option>
+					<option value="ann25Wage">25th percentile wage</option>
+					<option value="ann50Wage">50th percentile wage</option>
+					<option value="ann75Wage">75th percentile wage</option>
+					<option value="ann90Wage">90th percentile wage</option>
+				</select>
+			</div>
+			<h1>Occupational scope</h1>
+			<div>
+				<select id="categorySelect" onchange="redrawMap(true, true);">
+					<option value="categories">Categories</option>
+					<option value="subcategories" selected="selected">Sub-Categories</option>
+				</select>
+			</div>
+			<h1>About</h1>
+			<div>
+				This visualization shows per-state, per-occupation data according to one of seven measures. Click on a state to see a breakdown of the data for all occupations in the treemap, or click on an occupation in the treemap to see how it varies across the nation. States are colored white if an exact value was not reported in the data. The hover text will indicate -1 in this case.
+			</div>
+			<h1>Source</h1>
+			<div>
+				This visualization uses the State Cross-Industry estimates of May 2009 Occupational Employment and Wage Estimates data from the U.S. Bureau of Labor Statistics. The original data can be found on the <a href="http://www.bls.gov/oes/oes_dl.htm">BLS website</a>.
+			</div>
+			<h1>Credits</h1>
+			<div>
+				Inspiration for this visualization was drawn from the <a href="http://vis.stanford.edu/protovis/ex/treemap.html">treemap</a> and <a href="http://vis.stanford.edu/protovis/ex/choropleth.html">choropleth map</a> examples on the <a href="http://protovis.org/">Protovis website</a>. Additionally, the base colors for the geographic map were generated using the execellent <a href="http://colorbrewer2.org/">Colorbrewer 2.0</a> tool.
+			</div>
 		</div>
 		</div>
 	</body>
