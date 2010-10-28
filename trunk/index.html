@@ -193,7 +193,7 @@ statePanel.add(pv.Panel)
 			return geoColor(getValue(c.code, selectedOccupation, selectedMeasure));
 		})
 		.lineWidth(1)
-		.strokeStyle("white")
+		.strokeStyle("#eee")
 		.antialias(false)
 		.event("mouseover", function(d, l, c) { setVisible('popupData', c, selectedOccupation, true, undefined); geoHover = c; return stateLabels; })
 		.event("mouseout", function(d, l, c) { setVisible('popupData', c, selectedOccupation, false, undefined); geoHover = {}; return stateLabels; })
