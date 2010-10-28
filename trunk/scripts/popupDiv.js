@@ -48,13 +48,15 @@ function setVisible(obj, state, occupation, show, treemapNode) {
 		obj.appendChild(ann90WageLabel);
 		
 		if (treemapNode) {
-			obj.style.left = treemapNode.x + treemapNode.dx/2 + 230 + 50 + 'px';
+			console.log(treemapNode);
+			obj.style.left = Math.floor(treemapNode.x + treemapNode.dx + 245) + 'px';
 			var newHeight = obj.offsetHeight;
-			var currentTop = treemapNode.y + treemapNode.dy/2 + 430;
-			obj.style.top = (currentTop - newHeight) + 'px';
+			var currentTop = treemapNode.y + 430; // + treemapNode.dy/2
+			obj.style.top = Math.floor(currentTop - newHeight) + 'px';
+			console.log(obj.style.left);
 
 		} else {
-			obj.style.left = (geoScale(state.centLatLon).x + 230 + 90) +  'px';
+			obj.style.left = (geoScale(state.centLatLon).x + 245 + 90) +  'px';
 			obj.style.top = geoScale(state.centLatLon).y + 'px';	
 		}
 		

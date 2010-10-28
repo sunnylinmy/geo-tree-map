@@ -241,6 +241,8 @@ stateLegend = vis.add(pv.Bar)
 
 
 // BEGIN TREEMAP
+setTreemapTitleDescription("treeTitle", selectedMeasure, selectedState);
+
 function getNodes() {
 	return nodes;
 }
@@ -296,7 +298,7 @@ treemap.leaf.add(pv.Panel)
 			if (level(occupationForNode(d)) == 3) {
 				return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? treeColor(d).brighter() : treeColor(d);
 			} else {
-				return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? pv.color("#17becf").brighter() : pv.color("#17becf");
+				return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? pv.color("#aec7e8").brighter() : pv.color("#aec7e8");
 			}
 			})
 		.strokeStyle("rgba(255,255,255,0.3)")
@@ -357,6 +359,7 @@ function updateGeomap() {
 }
 
 function updateTreemap() {
+	setTreemapTitleDescription("treeTitle", selectedMeasure, selectedState);
 	nodes = pv.dom(getAllValues(selectedMeasure, selectedOccupation, selectedState.code)).nodes();
 	treemap.reset();
 	treemap.render()
