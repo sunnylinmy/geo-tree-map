@@ -22,20 +22,12 @@
 	<body>
 		<!-- Data on demand popup window -->
 		<div id="popupData"></div>
-		<div id="titleDescription"></div>
-			<select id ="measureSelect" onchange="redrawMap(true, true);">
-				<option value="total">Total</option>
-				<option value="annualMeanWage">Annual mean wage</option>
-				<option value="ann10Wage">10th percentile wage</option>
-				<option value="ann25Wage">25th percentile wage</option>
-				<option value="ann50Wage">50th percentile wage</option>
-				<option value="ann75Wage">75th percentile wage</option>
-				<option value="ann90Wage">90th percentile wage</option>
-			</select>
-			<select id="categorySelect" onchange="redrawMap(true, true);">
-				<option value="categories">Categories</option>
-				<option value="subcategories" selected="selected">Sub-Categories</option>
-			</select>
+		
+		<!-- Left panel with titles -->
+		<div id="leftPanel">
+			<div id="geoTitle" class="mapTitle"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div>
+			<div id="treeTitle" class="mapTitle"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div>
+		</div>
 		
 		<!-- Protovis rendering -->
 		<div id="fig">
@@ -50,7 +42,7 @@ var selectedOccupation = {
 
 var width = 800,
 		geoHeight = 400,
-		treeHeight = 400,
+		treeHeight = 300,
 		measureMaxVal = 0,
 		measureMinVal = 0;
 		
@@ -145,7 +137,7 @@ function initializeVars() {
 			.domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
 			.range({x: 0, y: 0}, {x: width, y: geoHeight});
 	
-	setTitleDescription("titleDescription", selectedMeasure, selectedOccupation);
+	setTitleDescription("geoTitle", selectedMeasure, selectedOccupation);
 	findMaxMinValue(selectedOccupation, selectedMeasure);
 	
 	intervalScale = (measureMaxVal - measureMinVal)/5;		
@@ -165,8 +157,8 @@ us_lowres.forEach(function(c) {
 // Add the main panel
 var vis = new pv.Panel()
 		.width(width)
-		.height(geoHeight + treeHeight + 60)
-		.top(30)
+		.height(geoHeight + treeHeight + 30)
+		.top(0)
 		.bottom(0);
 
 
@@ -300,7 +292,13 @@ var treemap = vis.add(pv.Layout.Treemap)
 		.padding(1);
 
 treemap.leaf.add(pv.Panel)
-		.fillStyle(function(d) { return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? treeColor(d).brighter() : treeColor(d); })
+		.fillStyle(function(d) {
+			if (level(occupationForNode(d)) == 3) {
+				return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? treeColor(d).brighter() : treeColor(d);
+			} else {
+				return occupationMatchesNode(treeHover,d) || occupationMatchesNode(selectedOccupation,d) ? pv.color("#17becf").brighter() : pv.color("#17becf");
+			}
+			})
 		.strokeStyle("rgba(255,255,255,0.3)")
 		.lineWidth(1)
 		.antialias(false)
@@ -367,8 +365,23 @@ function updateTreemap() {
 vis.render();
 
 			</script>
-
 		</div>
-
+		
+		<!-- Right panel with options, about, and source info -->
+		<div id="rightPanel">
+			<select id ="measureSelect" onchange="redrawMap(true, true);">
+				<option value="total">Total</option>
+				<option value="annualMeanWage">Annual mean wage</option>
+				<option value="ann10Wage">10th percentile wage</option>
+				<option value="ann25Wage">25th percentile wage</option>
+				<option value="ann50Wage">50th percentile wage</option>
+				<option value="ann75Wage">75th percentile wage</option>
+				<option value="ann90Wage">90th percentile wage</option>
+			</select>
+			<select id="categorySelect" onchange="redrawMap(true, true);">
+				<option value="categories">Categories</option>
+				<option value="subcategories" selected="selected">Sub-Categories</option>
+			</select>
+		</div>
 	</body>
 </html>

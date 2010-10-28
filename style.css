@@ -3,14 +3,10 @@ body {
   height: 100%;
   width: 100%;
   font: 14px/125% "Helvetica Neue", sans-serif;
+	background-color: #eee;
 }
 
-#fig {
-  margin: auto;
-  width: 800px;
-  height: 860px;
-}
-
+/* Hover popup styling */
 #popupData {
   position: absolute;
   visibility: hidden;
@@ -22,21 +18,64 @@ body {
   z-index:100;
 }
 
-#titleDescription {
-  width: 910px;
-  height: 20px;	
-  margin: auto;
-  font-size: 16pt;
-  padding-top: 30px;
-}
-
-
-#close a {
-  float: right;
-  font-weight: bold;
-  text-decoration: none;
-}
-
 #titlePopupDiv {
   font-weight: bold;
+}
+
+/* Three main panels */
+#leftPanel {
+	float: left;
+	width: 200px;
+	height: 730px;
+	padding: 0 15px;
+	background-color: white;
+}
+
+#fig {
+	float: left;
+  width: 800px;
+  height: 730px;
+	padding: 0 15px;
+	background-color: white;
+}
+
+#rightPanel {
+	float: left;
+	width: 200px;
+	height: 730px;
+	border-left: 1px solid black;
+	padding: 0 15px;
+}
+
+/* titles in the left panel */
+.mapTitle {
+	position: absolute;
+  width: 200px;
+  
+  padding: 0;
+  margin: 0;
+	
+  font-size: 14pt;
+}
+
+.line1 {
+	width: 200px;
+}
+
+.line2 {
+	width: 200px;
+	font-size: 12pt;
+	padding: 10px 0;
+}
+
+.line3 {
+	width: 200px;
+}
+
+#geoTitle {
+	top: 10px;
+}
+
+#treeTitle {
+	top: 430px;
 }
